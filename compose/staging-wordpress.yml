@@ -1,0 +1,49 @@
+version: '3.5'
+
+services:
+
+  db:
+    image: mysql:5.7
+    container_name: '${COMPOSE_PROJECT_NAME}_db'
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - wp_network
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'staging_wordpress'
+      MYSQL_ROOT_USER: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
+
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: ~/containers/wordpress
+      dockerfile: Dockerfile
+    container_name: '${COMPOSE_PROJECT_NAME}_wordpress'
+    volumes:
+      - ${P7_BUILD}:/var/www/html/${SUBDIR}/wp-content/themes/prophoto7
+    networks:
+      - wp_network
+      - proxy_network
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: '${COMPOSE_PROJECT_NAME}_db:3306'
+      WORDPRESS_DB_NAME: 'staging_wordpress'
+      WORDPRESS_DB_USER: 'root'
+      WORDPRESS_DB_PASSWORD: 'root'
+      WP_DEBUG: 1
+      WP_URL: '${WP_URL}'
+      FLUSH_DB: 0
+      PHP_VERSION: '5.4'
+      SUBDIR: ${SUBDIR}
+
+networks:
+  wp_network:
+    name: wp_network
+  proxy_network:
+    name: proxy_network
+
+volumes:
+  dbdata:

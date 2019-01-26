@@ -1,0 +1,21 @@
+version: '3.5'
+
+services:
+
+  staging_nginx:
+    container_name: 'staging_nginx'
+    build:
+      context: ~/containers/nginx
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - ~/proxies:/proxies
+      - ~/containers/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - proxy_network
+    ports:
+     - '80:80'
+
+networks:
+  proxy_network:
+    name: proxy_network
