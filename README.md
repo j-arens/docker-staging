@@ -2,7 +2,7 @@
 
 Test setup for deploying and hosting P7 wordpress staging sites to test pull requests. Built with docker, docker-compose, nginx, and some bash functions.
 
-Steps to deploy:
+Steps to deploy a staging site (should be scripted):
 
 1. Create a deployment directory with `mc_create_deploy_dir <branch-name> <commit-sha>`
 2. Place built app in deploy directory, unzip with `mc_unzip_artifact <branch-name> <commit-sha> <target>` if needed
